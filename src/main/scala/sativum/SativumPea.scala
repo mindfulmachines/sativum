@@ -12,6 +12,6 @@ class SativumPea[+D: ClassTag](task: Task[D]) extends Pea[D](task) {
     Nil
   }
   override def recursiveVersionShort: String = {
-    ""
+    "sativum"
   }
 }

@@ -13,7 +13,7 @@ class Sativum(path: String, raw: String)(implicit sc: SparkContext) extends Peap
   override def pea[D: ClassTag](d: Task[D]): Pea[D] = this.synchronized {
     val f= peas.getOrElseUpdate(
       d.name,
-      new Pea(d)
+      new SativumPea(d)
     ).asInstanceOf[Pea[D]]
     f
   }
