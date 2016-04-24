@@ -2,9 +2,7 @@ package sativum
 
 import org.joda.time.{Days, LocalDate}
 
-/**
-  * Created by marcin.mejran on 4/19/16.
-  */
+
 object Implicits {
   implicit class RichLocalDate(val self: LocalDate) {
     def until(end: LocalDate): Seq[LocalDate] = {

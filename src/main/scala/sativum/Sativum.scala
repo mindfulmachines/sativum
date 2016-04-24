@@ -6,14 +6,22 @@ import peapod.{Pea, Task, Peapod}
 import scala.reflect.ClassTag
 import collection.JavaConversions._
 
-/**
-  * Created by marcin.mejran on 4/15/16.
-  */
 class Sativum(path: String, raw: String)(implicit sc: SparkContext) extends Peapod(path,raw) {
-  override def pea[D: ClassTag](d: Task[D]): Pea[D] = this.synchronized {
+
+  /**
+    * Returns back if all peas in this pod are ready, this would only be false in the case of Sensor Tasks
+    *
+    */
+  def ready(): Boolean = {
+    peas.values().forall{
+      case s: SativumPea => s.ready()
+      case _ => true
+    }
+  }
+  override def pea[D: ClassTag](t: Task[D]): Pea[D] = this.synchronized {
     val f= peas.getOrElseUpdate(
-      d.name,
-      new SativumPea(d)
+      t.name,
+      new SativumPea(t)
     ).asInstanceOf[Pea[D]]
     f
   }

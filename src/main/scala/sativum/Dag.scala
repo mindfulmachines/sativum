@@ -1,11 +1,9 @@
 package sativum
 
+import org.joda.time.LocalDate
 import peapod.Task
 
-/**
-  * Created by marcin.mejran on 4/20/16.
-  */
-abstract class Dag {
+abstract class Dag(dt: LocalDate) {
   val sativum: Sativum
   var endpoints: List[Task[_]] = Nil
   def endpoint (t: Task[_]) = {

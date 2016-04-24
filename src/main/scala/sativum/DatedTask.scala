@@ -4,7 +4,7 @@ import org.joda.time.LocalDate
 import peapod.Task
 
 /**
-  * Created by marcin.mejran on 4/1/16.
+  * This is a Task that is run on a daily basis or which can be tied to a date
   */
 trait DatedTask[D] extends Task[D] {
   self : Task[D] =>
