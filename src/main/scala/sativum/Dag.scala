@@ -4,16 +4,17 @@ import org.joda.time.LocalDate
 import peapod.Task
 
 abstract class Dag(dt: LocalDate) {
-  val sativum: Sativum
-  var endpoints: List[Task[_]] = Nil
+  lazy val name: String = this.getClass.getName
+
+  protected val sativum: Sativum
+  var endpoints: List[SativumPea[_]] = Nil
   def endpoint (t: Task[_]) = {
-    endpoints = endpoints :+ t
+    endpoints = endpoints :+ sativum.pea(t)
   }
   def run() {
-    endpoints.par.map(sativum(_).get())
+    endpoints.par.map(_.get())
   }
   def view(): String = {
-    endpoints.par.map(sativum(_))
     peapod.Util.teachingmachinesDotLink(sativum.dotFormatDiagram())
   }
 }
