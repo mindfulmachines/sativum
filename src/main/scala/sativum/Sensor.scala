@@ -8,7 +8,7 @@ trait Sensor {
 }
 
 trait FileSensor {
-  self: Task =>
+  self: Task[_] =>
   def ready(): Boolean = {
     val path = new Path(source)
     path.getFileSystem(p.sc.hadoopConfiguration).globStatus(path).nonEmpty
