@@ -1,12 +1,17 @@
 package sativum
 
+import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.spark.SparkContext
-import peapod.{Pea, Task, Peapod}
+import peapod.{Pea, Peapod, Task}
 
 import scala.reflect.ClassTag
 import collection.JavaConversions._
 
-class Sativum(path: String, raw: String)(implicit sc: SparkContext) extends Peapod(path,raw) {
+class Sativum(path: String,
+              raw: String,
+              conf: Config = ConfigFactory.empty())
+             (implicit sc: SparkContext)
+  extends Peapod(path,raw,conf) {
 
   /**
     * Returns back if all peas in this pod are ready, this would only be false in the case of Sensor Tasks
@@ -14,15 +19,15 @@ class Sativum(path: String, raw: String)(implicit sc: SparkContext) extends Peap
     */
   def ready(): Boolean = {
     peas.values().forall{
-      case s: SativumPea => s.ready()
+      case s: SativumPea[_] => s.ready()
       case _ => true
     }
   }
-  override def pea[D: ClassTag](t: Task[D]): Pea[D] = this.synchronized {
+  override def pea[D: ClassTag](t: Task[D]): SativumPea[D] = this.synchronized {
     val f= peas.getOrElseUpdate(
       t.name,
       new SativumPea(t)
-    ).asInstanceOf[Pea[D]]
+    ).asInstanceOf[SativumPea[D]]
     f
   }
 }
