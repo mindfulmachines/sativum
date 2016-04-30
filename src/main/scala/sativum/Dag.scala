@@ -12,6 +12,9 @@ abstract class Dag {
     endpoints = endpoints :+ sativum.pea(t)
   }
   def run() {
+    while(! sativum.ready()) {
+      Thread.sleep(60000)
+    }
     endpoints.par.map(_.get())
   }
   def view(): String = {

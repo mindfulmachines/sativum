@@ -10,8 +10,10 @@ import collection.JavaConversions._
 class Sativum(path: String,
               raw: String,
               conf: Config = ConfigFactory.empty())
-             (implicit sc: SparkContext)
-  extends Peapod(path,raw,conf) {
+             (_sc: => SparkContext)
+  extends Peapod(path,raw,conf)(_sc) {
+
+  override val recursiveVersioning = false
 
   /**
     * Returns back if all peas in this pod are ready, this would only be false in the case of Sensor Tasks
