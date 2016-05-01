@@ -13,8 +13,7 @@ class SativumPea[+D: ClassTag](task: Task[D]) extends Pea[D](task) with Logging 
       case _ => true
     }
   }
-  override def build(): D = {
+  def delete(): Unit = {
     task.delete()
-    task.build()
   }
 }
