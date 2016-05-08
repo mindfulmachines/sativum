@@ -32,4 +32,11 @@ class Sativum(path: String,
     ).asInstanceOf[SativumPea[D]]
     f
   }
+  def pea(t: Task[_]): Pea[_] = this.synchronized {
+    val f= peas.getOrElseUpdate(
+      t.name,
+      new SativumPea(t)
+    )
+    f
+  }
 }
