@@ -15,3 +15,12 @@ trait FileSensor extends Task[Any] with Sensor {
   }
 }
 
+trait FilesSensor extends Task[Any] with Sensor {
+  val sources: List[String]
+  def ready(): Boolean = {
+    sources.exists { source =>
+      val path = new Path(source)
+      path.getFileSystem(p.sc.hadoopConfiguration).globStatus(path).nonEmpty
+    }
+  }
+}
