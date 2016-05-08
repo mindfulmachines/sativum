@@ -5,7 +5,7 @@ import peapod.Task
 
 abstract class DatedDag(_dt: String) extends Dag {
   val dt = new LocalDate(_dt)
-  def runDated(): Unit = {
+  def runDated() {
     while (!sativum.ready()) {
       Thread.sleep(60000)
     }
