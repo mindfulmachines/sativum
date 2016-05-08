@@ -96,7 +96,7 @@ abstract class RedshiftStorableTask extends Task[DataFrame] with DatedTask with 
         .createStatement().executeQuery(s"SELECT * FROM $table LIMIT 1;")
       true;
     } catch {
-      case e: _ => false
+      case e: Exception => false
     } finally {
       connection.close()
     }
