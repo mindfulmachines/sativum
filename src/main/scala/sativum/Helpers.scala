@@ -10,4 +10,10 @@ object Helpers {
   def isSensor(a: Any) = {
     a.isInstanceOf[Sensor]
   }
+  def isCondition(a: Any) = {
+    a.isInstanceOf[Condition]
+  }
+  def isConditional(a: Any) = {
+    a.isInstanceOf[Conditional]
+  }
 }
