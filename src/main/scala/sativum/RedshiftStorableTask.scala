@@ -14,7 +14,11 @@ abstract class RedshiftStorableTask extends Task[DataFrame] with DatedTask with 
 
   val storable = true
 
-  val table = baseName.replace(".","_") + "_" + recursiveVersionShort
+  val table = if(p.recursiveVersioning) {
+    baseName.replace(".","_") + "_" + recursiveVersionShort
+  } else {
+    baseName.replace(".","_")
+  }
 
   val temps3 = p.conf.getString("peapod.redshift.temp")
 
