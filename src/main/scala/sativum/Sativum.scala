@@ -25,18 +25,24 @@ class Sativum(path: String,
       case _ => true
     }
   }
-  override def pea[D: ClassTag](t: Task[D]): SativumPea[D] = this.synchronized {
-    val f= peas.getOrElseUpdate(
+
+  override protected def generatePea(t: Task[_]): Pea[_] = {
+    peas.getOrElseUpdate(
       t.name,
-      new SativumPea(t)
-    ).asInstanceOf[SativumPea[D]]
-    f
-  }
-  def pea(t: Task[_]): Pea[_] = this.synchronized {
-    val f= peas.getOrElseUpdate(
-      t.name,
-      new SativumPea(t)
+      {
+        val p = new SativumPea(t)
+        setLinkages(t,p)
+        p
+      }
     )
-    f
+  }
+
+
+  override def pea[D: ClassTag](t: Task[D]): SativumPea[D] = this.synchronized {
+    generatePea(t).asInstanceOf[SativumPea[D]]
+  }
+
+  def pea(t: Task[_]): Pea[_] = this.synchronized {
+    generatePea(t)
   }
 }
