@@ -16,4 +16,16 @@ class SativumPea[+D: ClassTag](task: Task[D]) extends Pea[D](task) with Logging 
   def delete(): Unit = {
     task.delete()
   }
+
+  override def buildCache(): Unit =  {
+    task match {
+      case s: Condition =>
+        if(s.condition()) {
+          super.buildCache()
+        }
+      case _ =>
+        super.buildCache()
+    }
+
+  }
 }

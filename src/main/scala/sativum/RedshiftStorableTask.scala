@@ -40,7 +40,7 @@ abstract class RedshiftStorableTask extends Task[DataFrame] with DatedTask with 
     val df = p.sqlCtx.read
       .format("com.databricks.spark.redshift")
       .option("url", url)
-      .option("query", s"select * from $table where dt='${partition.toString}';")
+      .option("query", s"select * from $table where dt='${partition.toString}'")
       .option("tempdir", temps3)
       .load()
     val cols = df.columns.filter(_ != "dt").map(col(_))
@@ -50,7 +50,7 @@ abstract class RedshiftStorableTask extends Task[DataFrame] with DatedTask with 
   protected def writeSuccess(): Unit = {
     val connection = DriverManager.getConnection(url)
     createPeapodTable(connection)
-    connection.createStatement().executeQuery(s"insert into peapod(tbl, dt) values('$table','${partition.toString}');")
+    connection.createStatement().executeUpdate(s"insert into peapod(tbl, dt) values('$table','${partition.toString}');")
     connection.close()
   }
 
@@ -70,9 +70,9 @@ abstract class RedshiftStorableTask extends Task[DataFrame] with DatedTask with 
   def delete(): Unit = {
     val connection = DriverManager.getConnection(url)
     createPeapodTable(connection)
-    connection.createStatement().executeQuery(s"delete from peapod where tbl = '$table' and dt = '${partition.toString}';")
+    connection.createStatement().executeUpdate(s"delete from peapod where tbl = '$table' and dt = '${partition.toString}';")
     if(tableExists()) {
-      connection.createStatement().executeQuery(s"delete from $table where dt = '${partition.toString}';")
+      connection.createStatement().executeUpdate(s"delete from $table where dt = '${partition.toString}';")
     }
     connection.close()
   }
@@ -84,7 +84,7 @@ abstract class RedshiftStorableTask extends Task[DataFrame] with DatedTask with 
       if (tableExists()) {
         val resultSet = connection
           .createStatement()
-          .executeQuery(s"select * from peapod where tbl = '$table' and dt = '${partition.toString}';")
+          .executeQuery(s"select * from peapod where tbl = '$table' and dt = '${partition.toString}'")
         resultSet.next()
       } else {
         false
@@ -107,6 +107,6 @@ abstract class RedshiftStorableTask extends Task[DataFrame] with DatedTask with 
   }
 
   private def createPeapodTable(conn: Connection) = {
-    conn.createStatement().executeQuery(s"create table if not exists peapod (tbl varchar(256), dt char(10));")
+    conn.createStatement().execute(s"create table if not exists peapod (tbl varchar(256), dt char(10));")
   }
 }
