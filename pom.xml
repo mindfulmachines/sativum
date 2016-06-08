@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.teachingmachines</groupId>
+    <groupId>io.mindfulmachines</groupId>
     <artifactId>sativum_2.11</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Sativum</name>
     <description>ETL framework for Spark and Scala.</description>
-    <url>https://github.com/teachingmachines/sativum</url>
+    <url>https://github.com/mindfulmachines/sativum</url>
 
     <licenses>
         <license>
@@ -24,23 +24,23 @@
     <developers>
         <developer>
             <name>Marcin Mejran</name>
-            <email>marcin@teachingmachines.io</email>
-            <organization>Teaching Machines</organization>
-            <organizationUrl>http://www.teachingmachines.io</organizationUrl>
+            <email>marcin@mindfulmachines.io</email>
+            <organization>Mindful Machines</organization>
+            <organizationUrl>http://www.mindfulmachines.io</organizationUrl>
         </developer>
         <developer>
             <name>Zoe Afshar</name>
-            <email>zoe@teachingmachines.io</email>
-            <organization>Teaching Machines</organization>
-            <organizationUrl>http://www.teachingmachines.io</organizationUrl>
+            <email>zoe@mindfulmachines.io</email>
+            <organization>Mindful Machines</organization>
+            <organizationUrl>http://www.mindfulmachines.io</organizationUrl>
         </developer>
     </developers>
 
 
     <scm>
-        <connection>scm:git:git@github.com:teachingmachines/sativum.git</connection>
-        <developerConnection>scm:git:git@github.com:teachingmachines/sativum.git</developerConnection>
-        <url>git@github.com:teachingmachines/sativum.git</url>
+        <connection>scm:git:git@github.com:mindfulmachines/sativum.git</connection>
+        <developerConnection>scm:git:git@github.com:mindfulmachines/sativum.git</developerConnection>
+        <url>git@github.com:mindfulmachines/sativum.git</url>
     </scm>
 
     <distributionManagement>
@@ -115,7 +115,7 @@
         </dependency>
 
         <dependency>
-            <groupId>io.teachingmachines</groupId>
+            <groupId>io.mindfulmachines</groupId>
             <artifactId>peapod_2.11</artifactId>
             <version>0.7-SNAPSHOT</version>
         </dependency>
