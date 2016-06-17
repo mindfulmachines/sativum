@@ -1,13 +1,14 @@
 package sativum
 
-import peapod.{EphemeralTask, Peapod, Storable, Task}
+import peapod.{EphemeralTask, Peapod, Storable}
 
 import scala.reflect.ClassTag
 
 /**
   * Created by marcin.mejran on 5/1/16.
   */
-class RemoteTask[D: ClassTag](val location: String)(implicit val p: Peapod, c: D => Storable[D]) extends EphemeralTask[D] with FileSensor {
+class RemoteTask[D: ClassTag](val location: String)(implicit val p: Peapod, c: D => Storable[D])
+  extends EphemeralTask[D] with FileSensor {
   override val source: String = location
 
   protected def read(): D = {

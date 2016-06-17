@@ -32,6 +32,7 @@ abstract class RedshiftStorableTask extends Task[DataFrame] with DatedTask with 
     writeSuccess()
     read()
   }
+
   def load(): DataFrame = {
     read()
   }

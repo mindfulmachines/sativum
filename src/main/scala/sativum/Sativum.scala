@@ -37,7 +37,6 @@ class Sativum(path: String,
     )
   }
 
-
   override def pea[D: ClassTag](t: Task[D]): SativumPea[D] = this.synchronized {
     generatePea(t).asInstanceOf[SativumPea[D]]
   }
