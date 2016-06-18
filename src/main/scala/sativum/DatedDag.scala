@@ -5,13 +5,14 @@ import org.joda.time.LocalDate
 abstract class DatedDag(_dt: String) extends Dag {
   val dt = new LocalDate(_dt)
   def runDated() {
-    while (!sativum.ready()) {
-      Thread.sleep(60000)
+    endpoints.map(sativum(_))
+    while (!ready()) {
+      Thread.sleep(waitTime)
     }
     endpoints.flatMap(_.children).foreach {
       case d: DatedTask => d.delete()
       case _ =>
     }
-    endpoints.par.map(sativum.pea(_).get())
+    endpoints.par.map(sativum(_).get())
   }
 }

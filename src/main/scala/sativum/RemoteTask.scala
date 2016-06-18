@@ -5,7 +5,8 @@ import peapod.{EphemeralTask, Peapod, Storable}
 import scala.reflect.ClassTag
 
 /**
-  * Created by marcin.mejran on 5/1/16.
+  * Helper class for a Task that reads a remote file source, implements a Sensor and uses the StorableTask
+  * serializers to read the file from disk. Useful for cross-dag data transfers and dependencies.
   */
 class RemoteTask[D: ClassTag](val location: String)(implicit val p: Peapod, c: D => Storable[D])
   extends EphemeralTask[D] with FileSensor {

@@ -15,17 +15,6 @@ class Sativum(path: String,
 
   override val recursiveVersioning = false
 
-  /**
-    * Returns back if all peas in this pod are ready, this would only be false in the case of Sensor Tasks
-    *
-    */
-  def ready(): Boolean = {
-    peas.values().forall{
-      case s: SativumPea[_] => s.ready()
-      case _ => true
-    }
-  }
-
   override protected def generatePea(t: Task[_]): Pea[_] = {
     peas.getOrElseUpdate(
       t.name,
