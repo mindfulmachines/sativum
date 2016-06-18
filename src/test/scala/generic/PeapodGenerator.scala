@@ -6,7 +6,7 @@ import java.util.Date
 
 import org.apache.hadoop.fs.Path
 import peapod.Peapod
-import sativum.Sativum
+import sativum.{Hive, Sativum}
 
 import scala.util.Random
 
