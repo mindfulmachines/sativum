@@ -14,7 +14,8 @@ import org.apache.spark.sql.DataFrame
 import org.joda.time.LocalDate
 import org.scalatest.FunSuite
 import peapod.{Peapod, StorableTask}
-import sativum.HiveTest.Parsed
+import sativum.HiveTest.{Parsed, Parsed2}
+
 import collection.JavaConverters._
 import peapod.StorableTask._
 
@@ -41,23 +42,38 @@ object HiveTest {
       raw.get().toDF()
     }
   }
+
+  class Parsed2(val partition: LocalDate)(implicit val p: Peapod)
+    extends StorableTask[DataFrame] with DatedTask {
+    override lazy val baseName = "sativum.HiveTest$Parsed"
+    override val version = "2"
+    val raw = pea(new Raw)
+    def generate = {
+      import p.sqlCtx.implicits._
+      raw.get().toDF()
+    }
+  }
 }
 
 class HiveTest extends FunSuite {
-  test("testHive") {
+  val sdf = new SimpleDateFormat("ddMMyy-hhmmss")
 
-    val sdf = new SimpleDateFormat("ddMMyy-hhmmss")
-    val path = System.getProperty("java.io.tmpdir") + "workflow-" + sdf.format(new Date()) + Random.nextInt()
+  def peapod(path: String
+             = System.getProperty("java.io.tmpdir") + "workflow-" + sdf.format(new Date()) + Random.nextInt()) = {
     new File(path).mkdir()
     new File(path).deleteOnExit()
 
     generic.Spark.sc.hadoopConfiguration.set("javax.jdo.option.ConnectionURL",
       "jdbc:derby:;databaseName=" + path.replace("\\","/") + "/derby/;create=true")
 
-    implicit val p = new Peapod(
+    (path, new Peapod(
       path= new Path("file://",path.replace("\\","/")).toString,
       raw="")(generic.Spark.sc) with Hive
+      )
+  }
 
+  test("Hive") {
+    implicit val (path, p) = peapod()
     val parsed = new Parsed(new LocalDate("2014-01-01"))
     p.pea(parsed).get()
     p.hive(parsed)
@@ -73,6 +89,27 @@ class HiveTest extends FunSuite {
     assert(client.tableExists("sativum","hivetest_parsed"))
 
     client.close()
+  }
 
+  test("HiveVersionChange") {
+    val (path, p) = peapod()
+    val parsed = new Parsed(new LocalDate("2014-01-01"))(p)
+    p.pea(parsed).get()
+    p.hive(parsed)
+
+    val (path2, p2) = peapod(path)
+    val parsed2 = new Parsed2(new LocalDate("2014-01-02"))(p2)
+    p2.pea(parsed2).get()
+    p2.hive(parsed2)
+
+    val config = new HiveConf()
+    p.sc.hadoopConfiguration.asScala.foreach(c => config.set(c.getKey,c.getValue))
+    val client = new HiveMetaStoreClient(config)
+
+    assert(client.tableExists("sativum","hivetest_parsed"))
+
+    assert(client.listPartitionNames("sativum","hivetest_parsed",10).asScala.toList == List("dt=2014-01-02"))
+
+    client.close()
   }
 }
