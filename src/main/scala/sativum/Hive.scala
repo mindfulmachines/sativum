@@ -13,7 +13,7 @@ import peapod._
 import scala.collection.JavaConversions._
 
 /**
-  * Created by marcin.mejran on 4/8/16.
+  *
   */
 trait Hive {
   self: Peapod =>
@@ -21,6 +21,10 @@ trait Hive {
   private val config = new HiveConf()
   sc.hadoopConfiguration.foreach(c => config.set(c.getKey,c.getValue))
   private val client = new HiveMetaStoreClient(config)
+
+  def close() {
+    client.close()
+  }
 
   def hive(task: StorableTask[DataFrame] with DatedTask): Unit = {
     val pea = this.pea(task)

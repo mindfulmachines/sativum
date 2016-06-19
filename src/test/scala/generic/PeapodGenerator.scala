@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 import org.apache.hadoop.fs.Path
-import peapod.Peapod
+import peapod.{Peapod, ShutdownHookManager}
 import sativum.{Hive, Sativum}
 
 import scala.util.Random
@@ -19,6 +19,7 @@ object PeapodGenerator {
     val path = System.getProperty("java.io.tmpdir") + "workflow-" + sdf.format(new Date()) + Random.nextInt()
     new File(path).mkdir()
     new File(path).deleteOnExit()
+    ShutdownHookManager.registerShutdownDeleteDir(new File(path))
     val w = new Peapod(
       path= new Path("file://",path.replace("\\","/")).toString,
       raw="")(generic.Spark.sc)
@@ -29,6 +30,7 @@ object PeapodGenerator {
     val path = System.getProperty("java.io.tmpdir") + "workflow-" + sdf.format(new Date()) + Random.nextInt()
     new File(path).mkdir()
     new File(path).deleteOnExit()
+    ShutdownHookManager.registerShutdownDeleteDir(new File(path))
     val w = new Sativum(
       path= new Path("file://",path.replace("\\","/")).toString,
       raw="")(generic.Spark.sc)

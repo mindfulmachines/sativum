@@ -13,7 +13,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.DataFrame
 import org.joda.time.LocalDate
 import org.scalatest.FunSuite
-import peapod.{Peapod, StorableTask}
+import peapod.{Peapod, ShutdownHookManager, StorableTask}
 import sativum.HiveTest.{Parsed, Parsed2}
 
 import collection.JavaConverters._
@@ -62,6 +62,7 @@ class HiveTest extends FunSuite {
              = System.getProperty("java.io.tmpdir") + "workflow-" + sdf.format(new Date()) + Random.nextInt()) = {
     new File(path).mkdir()
     new File(path).deleteOnExit()
+    ShutdownHookManager.registerShutdownDeleteDir(new File(path))
 
     generic.Spark.sc.hadoopConfiguration.set("javax.jdo.option.ConnectionURL",
       "jdbc:derby:;databaseName=" + path.replace("\\","/") + "/derby/;create=true")
@@ -89,6 +90,7 @@ class HiveTest extends FunSuite {
     assert(client.tableExists("sativum","hivetest_parsed"))
 
     client.close()
+    p.close()
 
     //This test is broken in Spark 1.6.x because the hadoopConf is not used to pre-populate the HiveConf
     //val hc = new HiveContext(p.sc)
@@ -115,5 +117,7 @@ class HiveTest extends FunSuite {
     assert(client.listPartitionNames("sativum","hivetest_parsed",10).asScala.toList == List("dt=2014-01-02"))
 
     client.close()
+    p.close()
+    p2.close()
   }
 }
