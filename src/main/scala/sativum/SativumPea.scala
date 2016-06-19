@@ -1,6 +1,6 @@
 package sativum
 
-import org.apache.spark.Logging
+import peapod.Logging
 import peapod.{Task, Pea}
 
 import scala.reflect.ClassTag

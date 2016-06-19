@@ -11,7 +11,6 @@ import org.apache.hadoop.hive.conf.HiveConf
 import org.apache.hadoop.hive.metastore.HiveMetaStoreClient
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.hive.HiveContext
 import org.joda.time.LocalDate
 import org.scalatest.FunSuite
 import peapod.{Peapod, StorableTask}
@@ -91,7 +90,7 @@ class HiveTest extends FunSuite {
 
     client.close()
 
-    //TODO: Fix this test
+    //This test is broken in Spark 1.6.x because the hadoopConf is not used to pre-populate the HiveConf
     //val hc = new HiveContext(p.sc)
     //assert(hc.sql("select count(*) as c from sativum.hivetest_parsed").head().getAs[Long]("c") == 24)
   }

@@ -2,7 +2,7 @@ package sativum
 
 import java.sql.{Connection, DriverManager}
 
-import org.apache.spark.Logging
+import peapod.Logging
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions._
 import peapod.Task
