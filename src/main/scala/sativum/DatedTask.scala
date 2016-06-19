@@ -11,13 +11,7 @@ trait DatedTask extends Task[Any] {
   override lazy val name: String = baseName+ "/" + partition.toString()
   override lazy val versionName = baseName
 
-  override lazy val dir =
-    if(p.recursiveVersioning) {
-      p.path + "/" + baseName + "/" + recursiveVersionShort + "/" +
+  override lazy val dir = p.path + "/" + baseName + "/" + storageRecursiveVersion() + "/" +
         partition.toString("yyyy/MM/dd") + "/"
-    } else {
-      p.path + "/" + baseName + "/" + "latest" + "/" +
-        partition.toString("yyyy/MM/dd") + "/"
-    }
 
 }
