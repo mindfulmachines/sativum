@@ -64,4 +64,5 @@ crashlytics.properties
 crashlytics-build.properties
 
 # Created by .ignore support plugin (hsz.mobi)
-project/
+project/project
+project/target
