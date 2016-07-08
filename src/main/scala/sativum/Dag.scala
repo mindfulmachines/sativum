@@ -28,11 +28,11 @@ abstract class Dag {
     while(! ready()) {
       Thread.sleep(waitTime)
     }
-    endpoints.flatMap(_.children).foreach(_.delete())
+    endpoints.flatMap(_.parents).foreach(_.delete())
     endpoints.par.map(sativum(_).get())
   }
 
   def view(): String = {
-    peapod.Util.teachingmachinesDotLink(sativum.dotFormatDiagram())
+    peapod.Util.mindfulmachinesDotLink(sativum.dotFormatDiagram())
   }
 }

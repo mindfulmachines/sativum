@@ -9,7 +9,7 @@ abstract class DatedDag(_dt: String) extends Dag {
     while (!ready()) {
       Thread.sleep(waitTime)
     }
-    endpoints.flatMap(_.children).foreach {
+    endpoints.flatMap(_.parents).foreach {
       case d: DatedTask => d.delete()
       case _ =>
     }

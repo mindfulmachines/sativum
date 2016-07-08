@@ -1,19 +1,21 @@
 package sativum
 
 import java.io.File
+import java.net.URI
+import java.sql.{DriverManager, SQLException}
 import java.text.SimpleDateFormat
 import java.util.Date
 
 import com.google.common.io.Resources
-import generic.PeapodGenerator
-import org.apache.hadoop.fs.Path
+import generic.{PeapodGenerator, Spark}
+import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.hive.conf.HiveConf
 import org.apache.hadoop.hive.metastore.HiveMetaStoreClient
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.DataFrame
 import org.joda.time.LocalDate
 import org.scalatest.FunSuite
-import peapod.{Peapod, ShutdownHookManager, StorableTask}
+import peapod.{Peapod, StorableTask}
 import sativum.HiveTest.{Parsed, Parsed2}
 
 import collection.JavaConverters._
@@ -58,17 +60,18 @@ object HiveTest {
 class HiveTest extends FunSuite {
   val sdf = new SimpleDateFormat("ddMMyy-hhmmss")
 
-  def peapod(path: String
+  def peapod(rawPath: String
              = System.getProperty("java.io.tmpdir") + "workflow-" + sdf.format(new Date()) + Random.nextInt()) = {
-    new File(path).mkdir()
-    new File(path).deleteOnExit()
-    ShutdownHookManager.registerShutdownDeleteDir(new File(path))
+    val path = new Path("file://",rawPath.replace("\\","/")).toString
+    val fs = FileSystem.get(new URI(path), Spark.sc.hadoopConfiguration)
+    fs.mkdirs(new Path(path))
+    fs.deleteOnExit(new Path(path))
 
     generic.Spark.sc.hadoopConfiguration.set("javax.jdo.option.ConnectionURL",
-      "jdbc:derby:;databaseName=" + path.replace("\\","/") + "/derby/;create=true")
+      "jdbc:derby:;databaseName=" + rawPath.replace("\\","/") + "/derby/;create=true")
 
-    (path, new Peapod(
-      path= new Path("file://",path.replace("\\","/")).toString,
+    (rawPath, new Peapod(
+      path= path,
       raw="")(generic.Spark.sc) with Hive
       )
   }
@@ -95,6 +98,11 @@ class HiveTest extends FunSuite {
     //This test is broken in Spark 1.6.x because the hadoopConf is not used to pre-populate the HiveConf
     //val hc = new HiveContext(p.sc)
     //assert(hc.sql("select count(*) as c from sativum.hivetest_parsed").head().getAs[Long]("c") == 24)
+    try {
+      DriverManager.getConnection("jdbc:derby:;shutdown=true")
+    } catch {
+      case e: SQLException =>
+    }
   }
 
   test("HiveVersionChange") {
@@ -119,5 +127,11 @@ class HiveTest extends FunSuite {
     client.close()
     p.close()
     p2.close()
+
+    try {
+      DriverManager.getConnection("jdbc:derby:;shutdown=true")
+    } catch {
+      case e: SQLException =>
+    }
   }
 }
