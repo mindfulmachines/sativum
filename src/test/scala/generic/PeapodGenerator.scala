@@ -6,14 +6,12 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 import org.apache.hadoop.fs.{FileSystem, Path}
-import peapod.{Peapod}
+import peapod.Peapod
 import sativum.{Hive, Sativum}
 
 import scala.util.Random
 
-/**
-  * Created by Marcin on 6/15/2016.
-  */
+
 object PeapodGenerator {
   def peapod() = {
     val sdf = new SimpleDateFormat("ddMMyy-hhmmss")

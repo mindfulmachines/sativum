@@ -4,9 +4,6 @@ import org.apache.hadoop.hive.metastore.api.FieldSchema
 import org.apache.hadoop.hive.serde.serdeConstants
 import org.apache.spark.sql.types._
 
-/**
-  * Created by marcin.mejran on 4/8/16.
-  */
 object StructTypeToHiveConverter {
   def convert(s : StructType): Array[(String, String)] = {
     s.fields.map{
