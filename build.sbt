@@ -7,27 +7,17 @@ lazy val commonSettings = Seq(
 )
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
-
 libraryDependencies += "org.apache.spark" %% "spark-core" % "1.6.2" % "provided" exclude("org.apache.hadoop", "hadoop-client")
-
 libraryDependencies += "org.apache.spark" %% "spark-sql" % "1.6.2" % "provided"
-
 libraryDependencies += "org.apache.spark" %% "spark-mllib" % "1.6.2" % "provided"
-
 libraryDependencies += "org.apache.spark" %% "spark-hive" % "1.6.2" % "provided"
-
 libraryDependencies += "org.apache.hadoop" % "hadoop-client" % "2.7.2" % "provided"  excludeAll ExclusionRule(organization = "javax.servlet")
-
 libraryDependencies += "net.java.dev.jets3t" % "jets3t" % "0.9.4" % "provided"
-
 libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "2.12.0"
-
 libraryDependencies += "io.mindfulmachines" %% "peapod" % "0.9-SNAPSHOT"
-
 libraryDependencies += "com.typesafe" % "config" % "1.3.0"
 
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
-
 resolvers += "Typesafe Snapshots" at "http://repo.typesafe.com/typesafe/snapshots/"
 
 pomIncludeRepository := { _ => false }
